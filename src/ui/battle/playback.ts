@@ -83,8 +83,24 @@ function findCreature(state: DisplayState, instanceId: string): DisplayCreature 
   );
 }
 
-function nameOf(state: DisplayState, instanceId: string): string {
-  return findCreature(state, instanceId)?.name ?? instanceId;
+/**
+ * Side-aware creature reference for log text: "Your PH_X (slot 1)" /
+ * "Opponent PH_X (slot 1)". Both Circuits may field the same creature
+ * identity, so the name alone is ambiguous. Slot numbers come from the
+ * display state at the time of the event (the pre-frame state), so they
+ * stay accurate after compression — and they keep same-named summon tokens
+ * distinguishable within a side.
+ */
+function sideAwareName(state: DisplayState, instanceId: string): string {
+  const playerIndex = state.player.findIndex((c) => c.instanceId === instanceId);
+  if (playerIndex !== -1) {
+    return `Your ${(state.player[playerIndex] as DisplayCreature).name} (slot ${playerIndex + 1})`;
+  }
+  const opponentIndex = state.opponent.findIndex((c) => c.instanceId === instanceId);
+  if (opponentIndex !== -1) {
+    return `Opponent ${(state.opponent[opponentIndex] as DisplayCreature).name} (slot ${opponentIndex + 1})`;
+  }
+  return instanceId;
 }
 
 /** Mutates `state` (a fresh clone) to reflect one event. */
@@ -215,17 +231,17 @@ function logLine(
     case 'round_start':
       return `— Round ${event.round} —`;
     case 'trigger_fired':
-      return `${nameOf(preState, event.sourceId)} triggers (${TRIGGER_LABELS[event.trigger]}): ${describeAbility(event.abilityId)}`;
+      return `${sideAwareName(preState, event.sourceId)} triggers (${TRIGGER_LABELS[event.trigger]}): ${describeAbility(event.abilityId)}`;
     case 'attack':
       return null; // the exchange is summarized once, via the damage lines
     case 'damage': {
-      const targetName = nameOf(preState, event.targetId);
+      const targetName = sideAwareName(preState, event.targetId);
       const redirect =
         event.redirectedFrom !== undefined
-          ? `${targetName} intercepts the hit aimed at ${nameOf(preState, event.redirectedFrom)}! `
+          ? `${targetName} intercepts the hit aimed at ${sideAwareName(preState, event.redirectedFrom)}! `
           : '';
       if (event.blockedByShield) {
-        return `${redirect}${targetName}'s shield blocks the hit.`;
+        return `${redirect}A shield blocks the hit on ${targetName}.`;
       }
       let note = '';
       if (event.cause.kind === 'attack') {
@@ -240,19 +256,20 @@ function logLine(
       return `${redirect}${targetName} takes ${event.amount} damage${note} — ${event.remainingVitality} Vitality left.`;
     }
     case 'heal':
-      return `${nameOf(preState, event.targetId)} recovers ${event.amount} Vitality (now ${event.newVitality}).`;
+      return `${sideAwareName(preState, event.targetId)} recovers ${event.amount} Vitality (now ${event.newVitality}).`;
     case 'buff':
       return event.stat === 'power'
-        ? `${nameOf(preState, event.targetId)} gains +${event.amount} Power (now ${event.newValue}).`
-        : `${nameOf(preState, event.targetId)} gains +${event.amount} Vitality (now ${event.newValue}).`;
+        ? `${sideAwareName(preState, event.targetId)} gains +${event.amount} Power (now ${event.newValue}).`
+        : `${sideAwareName(preState, event.targetId)} gains +${event.amount} Vitality (now ${event.newValue}).`;
     case 'shield':
-      return `${nameOf(preState, event.targetId)} raises a shield (${event.charges} charge${event.charges === 1 ? '' : 's'}).`;
+      return `${sideAwareName(preState, event.targetId)} raises a shield (${event.charges} charge${event.charges === 1 ? '' : 's'}).`;
     case 'guard':
-      return `${nameOf(preState, event.targetId)} guards the ally behind it (${event.charges} charge${event.charges === 1 ? '' : 's'}).`;
+      return `${sideAwareName(preState, event.targetId)} guards the ally behind it (${event.charges} charge${event.charges === 1 ? '' : 's'}).`;
     case 'summon':
-      return `${event.creature.name} is summoned into the last slot (${event.creature.power}/${event.creature.vitality}).`;
+      // The token is not in the pre-frame state yet — side comes from the event.
+      return `${event.creature.side === 'player' ? 'Your' : "Opponent's"} ${event.creature.name} is summoned into the last slot (${event.creature.power}/${event.creature.vitality}).`;
     case 'defeat':
-      return `${nameOf(preState, event.instanceId)} is defeated.`;
+      return `${sideAwareName(preState, event.instanceId)} is defeated.`;
     case 'compression':
       return `The ${event.side === 'player' ? 'player' : 'opponent'} Circuit closes ranks.`;
     case 'battle_end':
@@ -350,7 +367,7 @@ export function buildPlayback(
       const [a, b] = group.events.filter((e) => e.type === 'attack');
       if (a?.type === 'attack' && b?.type === 'attack') {
         logLines.unshift(
-          `${nameOf(preState, a.attackerId)} and ${nameOf(preState, b.attackerId)} strike simultaneously!`,
+          `${sideAwareName(preState, a.attackerId)} and ${sideAwareName(preState, b.attackerId)} strike simultaneously!`,
         );
       }
     }
