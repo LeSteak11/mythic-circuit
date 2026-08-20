@@ -26,6 +26,8 @@
   },
   "include": [
     "vite.config.ts",
+    "playwright.config.ts",
+    "e2e",
     "scripts",
     "src/content/schemas.ts",
     "src/content/validateContent.ts",

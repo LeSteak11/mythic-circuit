@@ -25,4 +25,4 @@ Art and card frames, resolved **only** through `manifest.json`. Everything in `p
 
 New _variants_ (e.g. a foil) are one data entry in `src/content/data/card-variants.json` plus one manifest entry — still no code.
 
-**Delivery spec** (exact sizes, aspect ratios, formats, safe zones) is a Stage 0.3 deliverable; current placeholders use 512×512 art and 512×716 frames as a working stand-in.
+**Delivery spec** for Creative (exact sizes, formats, safe zones, icon rules): [`ai-communication-docs/phase-0/CREATIVE_ASSET_DELIVERY_SPEC.md`](../../ai-communication-docs/phase-0/CREATIVE_ASSET_DELIVERY_SPEC.md). Current placeholders use 512×512 art and 512×716 frames as a working stand-in for the pinned 1024×1024 / 1024×1432 masters.

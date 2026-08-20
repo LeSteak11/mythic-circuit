@@ -9,6 +9,7 @@ import {
   type AbilityDefinition,
   type CardVariant,
   type CreatureDefinition,
+  type OpponentLineup,
 } from './schemas';
 
 /**
@@ -139,6 +140,18 @@ export function validateContent(
         file: 'card-variants.json',
         message: `variant "${variant.id}" has no entry in src/assets/manifest.json`,
       });
+    }
+  }
+
+  const opponents = (parsed['opponent-lineups.json'] ?? []) as OpponentLineup[];
+  for (const opponent of opponents) {
+    for (const creatureId of opponent.creatureIds) {
+      if (!creatureIds.has(creatureId)) {
+        errors.push({
+          file: 'opponent-lineups.json',
+          message: `opponent "${opponent.id}" references unknown creatureId "${creatureId}"`,
+        });
+      }
     }
   }
 

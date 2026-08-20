@@ -1,0 +1,175 @@
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 380px);
+  gap: 1.5rem;
+  align-items: start;
+}
+
+@media (max-width: 1100px) {
+  .layout {
+    grid-template-columns: minmax(0, 1fr) minmax(260px, 320px);
+  }
+}
+
+.hint {
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+}
+
+.rosterGrid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr));
+  gap: 1rem;
+}
+
+.rosterItem {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.rosterItem button {
+  padding: 0.4rem;
+}
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  position: sticky;
+  top: 1rem;
+}
+
+.circuit,
+.opponents {
+  background: var(--color-surface);
+  border-radius: 10px;
+  padding: 1rem;
+}
+
+.circuit h3,
+.opponents h3 {
+  margin-top: 0;
+}
+
+.slots {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.slot,
+.emptySlot {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  padding: 0.5rem;
+  border-radius: 8px;
+  background: var(--color-bg);
+}
+
+.slot {
+  border: 1px solid var(--card-border-color);
+  cursor: grab;
+}
+
+.dragging {
+  opacity: 0.5;
+}
+
+.emptySlot {
+  border: 1px dashed var(--card-border-color);
+}
+
+.slotLabel {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-text-muted);
+}
+
+.slotName {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.emptyText {
+  color: var(--color-text-muted);
+  font-size: 0.85rem;
+}
+
+.slotControls {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+
+.slotControls button {
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+}
+
+.errors {
+  color: #ffb4a8;
+  font-size: 0.85rem;
+  padding-left: 1.2rem;
+}
+
+.circuitActions {
+  margin-top: 0.75rem;
+}
+
+.opponentButtons {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.opponentButtons button {
+  text-align: left;
+  padding: 0.5rem;
+}
+
+.opponentSelected {
+  outline: 2px solid var(--color-accent);
+}
+
+.archetype {
+  color: var(--color-text-muted);
+  font-size: 0.85em;
+}
+
+.opponentPreview h4 {
+  margin: 0.75rem 0 0.25rem;
+  font-size: 0.9rem;
+}
+
+.opponentList {
+  margin: 0;
+  padding-left: 1.4rem;
+  font-size: 0.85rem;
+}
+
+.battleButton {
+  margin-top: 1rem;
+  width: 100%;
+  padding: 0.7rem;
+  font-weight: 700;
+  background: var(--color-accent);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.battleButton:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}

@@ -1,0 +1,41 @@
+[
+  {
+    "id": "opponent-guardian-wall-01",
+    "name": "PH_GUARDIAN_WALL",
+    "creatureIds": [
+      "creature-ember-guardian-01",
+      "creature-tide-shellback-01",
+      "creature-tide-oracle-01",
+      "creature-verdant-healer-01",
+      "creature-volt-striker-01"
+    ],
+    "archetypeTag": "guardian-wall",
+    "difficultyTier": 1
+  },
+  {
+    "id": "opponent-scavenger-snowball-01",
+    "name": "PH_SCAVENGER_SNOWBALL",
+    "creatureIds": [
+      "creature-volt-martyr-01",
+      "creature-verdant-broodmother-01",
+      "creature-tide-scavenger-01",
+      "creature-ember-berserker-01",
+      "creature-ember-sniper-01"
+    ],
+    "archetypeTag": "scavenger-snowball",
+    "difficultyTier": 1
+  },
+  {
+    "id": "opponent-trigger-tempo-01",
+    "name": "PH_TRIGGER_TEMPO",
+    "creatureIds": [
+      "creature-ember-rager-01",
+      "creature-volt-striker-01",
+      "creature-volt-stormcaller-01",
+      "creature-ember-sniper-01",
+      "creature-ember-berserker-01"
+    ],
+    "archetypeTag": "trigger-tempo",
+    "difficultyTier": 1
+  }
+]

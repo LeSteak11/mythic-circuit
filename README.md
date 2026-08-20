@@ -2,7 +2,7 @@
 
 An original creature-collecting auto-battler for desktop web: open packs, collect creatures, arrange five of them into an ordered **Circuit**, and watch deterministic auto-battles in 7-win / 3-loss runs. Fully local — no backend, no accounts, no network calls.
 
-**Status:** Phase 0, Stage 0.1 — repository foundation. App shell + content schemas only; no gameplay yet.
+**Status:** Phase 0, Stage 0.3 — deterministic battle engine + playable builder → battle → result loop with temporary content. No collection, packs, or persistence yet.
 
 ## Setup
 
@@ -23,6 +23,7 @@ Then open the printed local URL (default `http://localhost:5173`).
 | `npm run build`            | Typecheck + production build to `dist/`                                                      |
 | `npm run preview`          | Serve the production build locally                                                           |
 | `npm test`                 | Run the Vitest suite once                                                                    |
+| `npm run test:e2e`         | Playwright end-to-end flow (starts the dev server itself; Chromium)                          |
 | `npm run lint`             | ESLint (includes the engine-isolation rules)                                                 |
 | `npm run typecheck`        | TypeScript project check (`tsc -b`)                                                          |
 | `npm run validate:content` | Validate all JSON under `src/content/data/` + the asset manifest; exits nonzero on any error |

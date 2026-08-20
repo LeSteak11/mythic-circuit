@@ -23,7 +23,22 @@ export function getVariantAssets(variantId: string): VariantAssets {
   return entry;
 }
 
+/**
+ * Build-time URL map of every asset under src/assets/. Vite rewrites these to
+ * hashed URLs in production; dynamic `new URL(..., import.meta.url)` is not
+ * statically analyzable, so the glob map is the reliable route.
+ */
+const assetUrls = import.meta.glob('./**/*.{svg,png,webp,jpg}', {
+  eager: true,
+  query: '?url',
+  import: 'default',
+}) as Record<string, string>;
+
 /** Resolves a manifest-relative asset path to a URL the browser can load. */
 export function resolveAssetUrl(relativePath: string): string {
-  return new URL(`./${relativePath}`, import.meta.url).href;
+  const url = assetUrls[`./${relativePath}`];
+  if (!url) {
+    throw new Error(`Asset file not found under src/assets/: ${relativePath}`);
+  }
+  return url;
 }

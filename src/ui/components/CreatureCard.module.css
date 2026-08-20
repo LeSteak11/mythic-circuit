@@ -1,0 +1,155 @@
+/* All appearance flows through --card-* tokens (defined in global.css) so
+   Creative can restyle the template without touching the structure. */
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--card-gap);
+  width: var(--card-width);
+  padding: var(--card-padding);
+  background: var(--card-bg);
+  border: var(--card-border-width) solid var(--card-border-color);
+  border-radius: var(--card-radius);
+  color: var(--card-text);
+  font-size: var(--card-font-size);
+}
+
+.compact {
+  width: var(--card-width-compact);
+  font-size: var(--card-font-size-compact);
+}
+
+/* Rarity is a border treatment + the text badge — never color alone. */
+.rarity_common {
+  border-style: solid;
+}
+.rarity_rare {
+  border-style: double;
+  border-color: var(--card-border-rare);
+}
+.rarity_mythic {
+  border-style: double;
+  border-width: calc(var(--card-border-width) * 2);
+  border-color: var(--card-border-mythic);
+}
+.rarity_token {
+  border-style: dashed;
+}
+
+.defeated {
+  opacity: 0.45;
+}
+
+.highlightSource {
+  outline: 3px solid var(--card-highlight-source);
+  outline-offset: 2px;
+}
+
+.highlightTarget {
+  outline: 3px dashed var(--card-highlight-target);
+  outline-offset: 2px;
+}
+
+.header {
+  min-height: 2em;
+}
+
+.name {
+  font-weight: 700;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.85em;
+  overflow-wrap: anywhere;
+}
+
+.artFrame {
+  position: relative;
+  aspect-ratio: 1;
+  background: var(--card-art-bg);
+  border-radius: calc(var(--card-radius) / 2);
+  overflow: hidden;
+}
+
+.art {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.frame {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+}
+
+.artPending {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  height: 100%;
+  padding: 0.5rem;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.75em;
+  border: 2px dashed var(--card-border-color);
+  color: var(--color-text-muted);
+}
+
+.meta {
+  display: flex;
+  justify-content: space-between;
+  text-transform: capitalize;
+  color: var(--color-text-muted);
+  font-size: 0.85em;
+}
+
+.element {
+  font-weight: 600;
+}
+
+.stats {
+  display: flex;
+  gap: 1rem;
+  margin: 0;
+}
+
+.stat {
+  display: flex;
+  gap: 0.35rem;
+}
+
+.stat dt {
+  color: var(--color-text-muted);
+}
+
+.stat dd {
+  margin: 0;
+  font-weight: 700;
+}
+
+.charges {
+  margin: 0;
+  font-size: 0.85em;
+  font-weight: 600;
+}
+
+.defeatedLabel {
+  margin: 0;
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 0.8em;
+  letter-spacing: 0.08em;
+}
+
+.ability {
+  margin: 0;
+  font-size: 0.85em;
+  color: var(--color-text-muted);
+}
+
+.ability strong {
+  color: var(--card-text);
+}
