@@ -1,6 +1,6 @@
 # Mythic Circuit — Game Design Reference
 
-**Version 1.0 — 2026-08-19 · Living document.** The PM updates this at stage gates. If a brief and this doc ever conflict, this doc wins until the PM says otherwise. Placeholder terms are marked (PH) — Creative owns final names.
+**Version 1.1 — 2026-08-19 · Living document.** The PM updates this at stage gates. If a brief and this doc ever conflict, this doc wins until the PM says otherwise. Placeholder terms are marked (PH) — Creative owns final names.
 
 ---
 
@@ -33,6 +33,16 @@ Also on the card, but **cosmetic/collection-only in MVP**: rarity (drop odds + f
 6. Everything is driven by one seeded RNG — same lineups + same seed = identical battle, every time.
 
 Every action emits an **event log** entry (attack, damage, trigger, buff, defeat, summon, end — each with its cause). The UI, explanations, and tests all read from this log.
+
+### Pinned engine semantics (Stage 0.2)
+
+- Attack damage is `max(1, round(Power × element multiplier))`; ability damage is flat and ignores elements.
+- Trigger queues resolve FIFO. Defeated creatures remain in their slots until the current queue drains, then a cleanup checkpoint removes them and compresses the lineup.
+- A queued trigger whose source has since been defeated is skipped, except `self_defeated`. `after_own_attack` fires only for an attacker that survived the exchange.
+- `first_below_half_vitality` fires once per creature per battle on the first drop strictly below half of maximum Vitality.
+- Guard redirects one hit from the living ally directly behind to the guardian, consumes one charge, never chains through another guardian, and does not intercept front-vs-front attacks. The guardian's own shield may block a redirected hit.
+- Summons enter the last living slot on the summoner's side, fizzle when five allies are alive, and use Power/Vitality equal to the ability magnitude, the summoner's element, and no ability.
+- `ally_lowest_vitality` includes the source and breaks ties front-most.
 
 ## 4. Elements
 
@@ -87,4 +97,4 @@ Evolution mechanics · family/tribal combat effects · Speed stat · more elemen
 
 ---
 
-*Change log: v1.0 — initial version from approved Phase 0 plan.*
+*Change log: v1.1 — Stage 0.2 pinned combat resolution, guard, summon, threshold, and targeting semantics. v1.0 — initial version from approved Phase 0 plan.*
