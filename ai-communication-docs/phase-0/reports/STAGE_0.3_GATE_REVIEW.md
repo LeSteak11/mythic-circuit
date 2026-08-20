@@ -2,7 +2,11 @@
 
 **Date:** 2026-08-19 · **Reviewer:** PM
 
-## Verdict: ❌ CHANGES REQUIRED
+## Current verdict after re-review: ✅ ACCEPTED WITH DOCUMENTED DEBT
+
+The required side-aware battle-log correction has been delivered and independently verified. Stage 0.3 is closed. The original gate finding and correction request remain below as the audit record.
+
+## Initial verdict: ❌ CHANGES REQUIRED
 
 The Stage 0.3 implementation is substantially complete and all required automated checks pass, but one player-facing acceptance criterion is not met: the persistent battle log does not identify which side an event belongs to when both Circuits contain the same creature identity.
 
@@ -64,4 +68,28 @@ Refresh the browser screenshot/report evidence after the correction, rerun the f
 
 ## Gate state
 
-Stage 0.3 remains open. Do not begin or brief Stage 0.4 until the correction is delivered and this gate is accepted.
+At the initial review, Stage 0.3 remained open pending the correction below.
+
+## Re-review — correction accepted
+
+The PM inspected the corrected `sideAwareName()` implementation and the three requested focused tests. Creature references now include side and event-time slot, including after compression and during guard redirection. The engine event log and combat semantics remain untouched.
+
+Independent re-verification passed:
+
+- `npm run typecheck` — exit 0
+- `npm run lint` — exit 0
+- `npm test` — 12 files, 90/90 tests passed
+- `npm run validate:content` — exit 0
+- `npm run sim:archetypes` — unchanged accepted table
+- `npm run build` — exit 0, 84 modules transformed
+- `npm run test:e2e` — Chromium 4/4 passed
+
+The refreshed battle evidence visibly distinguishes the mirror matchup: `Your PH_EMBER_GUARDIAN_01 (slot 1)` versus `Opponent PH_EMBER_GUARDIAN_01 (slot 1)` for the simultaneous exchange and both damage lines.
+
+### Documented debt carried forward
+
+1. **Commit attribution:** the `playback.ts` correction landed in Creative Director commit `d0251b1`, while its focused tests and correction report landed in `6baceca`. The code is correct, but the history is not stage-clean. Do not rewrite published history; keep future PM, Creative, and Developer commits separated and accurately labeled.
+2. **Summon creation wording:** summon events identify the side and say `last slot`; later token references use side plus numeric event-time slot. Adding the numeric slot directly to the summon-creation line is a small Stage 0.6 readability polish, not a Stage 0.3 blocker.
+3. The button-based ARIA radio-group improvement noted above remains Stage 0.6 accessibility polish.
+
+Stage 0.3 is now closed. Stage 0.4 is eligible for a separate PM brief but is not authorized by this verdict alone.
