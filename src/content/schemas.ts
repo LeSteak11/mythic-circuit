@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { EFFECT_TARGET_LEGALITY, EFFECT_TRIGGER_REQUIREMENTS } from '../engine/abilityRules';
 
 /**
  * Content schemas for Mythic Circuit, per the Phase 0 plan §6.
@@ -55,7 +56,7 @@ export const abilityEffectSchema = z.enum([
 ]);
 export type AbilityEffect = z.infer<typeof abilityEffectSchema>;
 
-/** Planning-level target list; Stage 0.2 will pin down per-effect legality. */
+/** Target list; per-effect legality is pinned in src/engine/abilityRules.ts. */
 export const abilityTargetSchema = z.enum([
   'self',
   'ally_behind',
@@ -77,7 +78,25 @@ export const abilityDefinitionSchema = z
     /** Human-readable template; {magnitude} is interpolated at render time. */
     descriptionTemplate: z.string().min(1),
   })
-  .strict();
+  .strict()
+  .superRefine((ability, ctx) => {
+    const legalTargets = EFFECT_TARGET_LEGALITY[ability.effect];
+    if (!legalTargets.includes(ability.target)) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['target'],
+        message: `effect "${ability.effect}" only allows targets: ${legalTargets.join(', ')}`,
+      });
+    }
+    const requiredTriggers = EFFECT_TRIGGER_REQUIREMENTS[ability.effect];
+    if (requiredTriggers && !requiredTriggers.includes(ability.trigger)) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['trigger'],
+        message: `effect "${ability.effect}" requires trigger: ${requiredTriggers.join(', ')}`,
+      });
+    }
+  });
 export type AbilityDefinition = z.infer<typeof abilityDefinitionSchema>;
 
 export const creatureDefinitionSchema = z

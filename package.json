@@ -11,7 +11,8 @@
     "lint": "eslint .",
     "typecheck": "tsc -b",
     "format": "prettier --write .",
-    "validate:content": "tsx scripts/validate-content.ts"
+    "validate:content": "tsx scripts/validate-content.ts",
+    "sim:archetypes": "tsx scripts/sim-archetypes.ts"
   },
   "dependencies": {
     "react": "^18.3.1",

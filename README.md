@@ -26,6 +26,7 @@ Then open the printed local URL (default `http://localhost:5173`).
 | `npm run lint`             | ESLint (includes the engine-isolation rules)                                                 |
 | `npm run typecheck`        | TypeScript project check (`tsc -b`)                                                          |
 | `npm run validate:content` | Validate all JSON under `src/content/data/` + the asset manifest; exits nonzero on any error |
+| `npm run sim:archetypes`   | Archetype win-rate simulation (engine evidence, see `src/engine/README.md`)                  |
 | `npm run format`           | Prettier over the repo                                                                       |
 
 ## Directory map

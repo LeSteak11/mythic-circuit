@@ -4,8 +4,8 @@
     "trigger": "battle_start",
     "effect": "guard",
     "magnitude": 1,
-    "target": "ally_behind",
-    "descriptionTemplate": "Redirects the next {magnitude} hit aimed at the ally behind to itself."
+    "target": "self",
+    "descriptionTemplate": "Guards the ally behind it, redirecting the next {magnitude} hit aimed at that ally to itself."
   },
   {
     "id": "ability-scavenge-01",
@@ -22,5 +22,77 @@
     "magnitude": 1,
     "target": "front_enemy",
     "descriptionTemplate": "Deals {magnitude} damage to the front enemy at the end of each round."
+  },
+  {
+    "id": "ability-mend-01",
+    "trigger": "after_own_attack",
+    "effect": "heal",
+    "magnitude": 2,
+    "target": "ally_lowest_vitality",
+    "descriptionTemplate": "After attacking, restores {magnitude} Vitality to the most wounded ally."
+  },
+  {
+    "id": "ability-rage-01",
+    "trigger": "before_own_attack",
+    "effect": "buff_power",
+    "magnitude": 1,
+    "target": "self",
+    "descriptionTemplate": "Gains {magnitude} Power just before each of its attacks."
+  },
+  {
+    "id": "ability-shell-01",
+    "trigger": "battle_start",
+    "effect": "shield",
+    "magnitude": 1,
+    "target": "self",
+    "descriptionTemplate": "Starts the battle with a shield that blocks the next {magnitude} hit."
+  },
+  {
+    "id": "ability-martyr-01",
+    "trigger": "self_defeated",
+    "effect": "buff_power",
+    "magnitude": 2,
+    "target": "all_allies",
+    "descriptionTemplate": "When defeated, grants {magnitude} Power to all remaining allies."
+  },
+  {
+    "id": "ability-brood-01",
+    "trigger": "self_defeated",
+    "effect": "summon",
+    "magnitude": 3,
+    "target": "self",
+    "descriptionTemplate": "When defeated, summons a {magnitude}/{magnitude} token into the last slot."
+  },
+  {
+    "id": "ability-frenzy-01",
+    "trigger": "first_below_half_vitality",
+    "effect": "buff_power",
+    "magnitude": 3,
+    "target": "self",
+    "descriptionTemplate": "The first time it drops below half Vitality, gains {magnitude} Power."
+  },
+  {
+    "id": "ability-bulwark-01",
+    "trigger": "battle_start",
+    "effect": "buff_vitality",
+    "magnitude": 2,
+    "target": "all_allies",
+    "descriptionTemplate": "At battle start, grants {magnitude} Vitality to all allies."
+  },
+  {
+    "id": "ability-storm-01",
+    "trigger": "end_of_round",
+    "effect": "damage",
+    "magnitude": 1,
+    "target": "all_enemies",
+    "descriptionTemplate": "Deals {magnitude} damage to every enemy at the end of each round."
+  },
+  {
+    "id": "ability-snipe-01",
+    "trigger": "battle_start",
+    "effect": "damage",
+    "magnitude": 2,
+    "target": "last_enemy",
+    "descriptionTemplate": "At battle start, deals {magnitude} damage to the last enemy."
   }
 ]

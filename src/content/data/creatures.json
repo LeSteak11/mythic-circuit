@@ -28,5 +28,95 @@
     "vitality": 3,
     "abilityId": "ability-spark-01",
     "familyTag": "tempo"
+  },
+  {
+    "id": "creature-verdant-healer-01",
+    "name": "PH_VERDANT_HEALER_01",
+    "element": "verdant",
+    "rarity": "common",
+    "power": 2,
+    "vitality": 5,
+    "abilityId": "ability-mend-01",
+    "familyTag": "guardian"
+  },
+  {
+    "id": "creature-ember-rager-01",
+    "name": "PH_EMBER_RAGER_01",
+    "element": "ember",
+    "rarity": "common",
+    "power": 3,
+    "vitality": 4,
+    "abilityId": "ability-rage-01",
+    "familyTag": "tempo"
+  },
+  {
+    "id": "creature-tide-shellback-01",
+    "name": "PH_TIDE_SHELLBACK_01",
+    "element": "tide",
+    "rarity": "common",
+    "power": 2,
+    "vitality": 8,
+    "abilityId": "ability-shell-01",
+    "familyTag": "guardian"
+  },
+  {
+    "id": "creature-volt-martyr-01",
+    "name": "PH_VOLT_MARTYR_01",
+    "element": "volt",
+    "rarity": "common",
+    "power": 2,
+    "vitality": 3,
+    "abilityId": "ability-martyr-01",
+    "familyTag": "scavenger"
+  },
+  {
+    "id": "creature-verdant-broodmother-01",
+    "name": "PH_VERDANT_BROODMOTHER_01",
+    "element": "verdant",
+    "rarity": "rare",
+    "power": 3,
+    "vitality": 5,
+    "abilityId": "ability-brood-01",
+    "familyTag": "scavenger"
+  },
+  {
+    "id": "creature-ember-berserker-01",
+    "name": "PH_EMBER_BERSERKER_01",
+    "element": "ember",
+    "rarity": "rare",
+    "power": 4,
+    "vitality": 6,
+    "abilityId": "ability-frenzy-01",
+    "familyTag": "scavenger"
+  },
+  {
+    "id": "creature-tide-oracle-01",
+    "name": "PH_TIDE_ORACLE_01",
+    "element": "tide",
+    "rarity": "mythic",
+    "power": 3,
+    "vitality": 5,
+    "abilityId": "ability-bulwark-01",
+    "familyTag": "guardian"
+  },
+  {
+    "id": "creature-volt-stormcaller-01",
+    "name": "PH_VOLT_STORMCALLER_01",
+    "element": "volt",
+    "rarity": "mythic",
+    "power": 4,
+    "vitality": 4,
+    "abilityId": "ability-storm-01",
+    "familyTag": "tempo"
+  },
+  {
+    "id": "creature-ember-sniper-01",
+    "name": "PH_EMBER_SNIPER_01",
+    "element": "ember",
+    "rarity": "rare",
+    "power": 4,
+    "vitality": 3,
+    "abilityId": "ability-snipe-01",
+    "familyTag": "tempo"
   }
 ]

@@ -29,6 +29,8 @@
     "scripts",
     "src/content/schemas.ts",
     "src/content/validateContent.ts",
-    "src/assets/manifestSchema.ts"
-  ]
+    "src/assets/manifestSchema.ts",
+    "src/engine"
+  ],
+  "exclude": ["src/engine/**/*.test.ts"]
 }
