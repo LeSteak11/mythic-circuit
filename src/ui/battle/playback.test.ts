@@ -209,7 +209,9 @@ describe('buildPlayback state reconstruction', () => {
     const snipeFrame = at('trigger', 2);
     expect(snipeFrame?.state.player[0]?.guard).toBe(0); // charge consumed by redirect
     expect(snipeFrame?.state.player[0]?.vitality).toBe(3);
-    expect(snipeFrame?.logLines.join(' ')).toContain('PH_A intercepts the hit aimed at PH_B');
+    expect(snipeFrame?.logLines.join(' ')).toContain(
+      'Your PH_A (slot 1) intercepts the hit aimed at Your PH_B (slot 2)',
+    );
   });
 
   it('applies the simultaneous exchange: shield block + lethal damage + defeat', () => {
@@ -220,9 +222,9 @@ describe('buildPlayback state reconstruction', () => {
     expect(exchange?.state.player[0]?.defeated).toBe(true);
     expect(exchange?.sourceIds).toEqual(['player-1', 'opponent-1']);
     const log = exchange?.logLines.join(' ') ?? '';
-    expect(log).toContain('strike simultaneously');
-    expect(log).toContain("PH_X's shield blocks the hit");
-    expect(log).toContain('PH_A is defeated');
+    expect(log).toContain('Your PH_A (slot 1) and Opponent PH_X (slot 1) strike simultaneously!');
+    expect(log).toContain('A shield blocks the hit on Opponent PH_X (slot 1)');
+    expect(log).toContain('Your PH_A (slot 1) is defeated');
   });
 
   it('appends summons, applies heal and both buff kinds', () => {
@@ -250,7 +252,159 @@ describe('buildPlayback state reconstruction', () => {
     // Attack at ×1.5 was blocked; verify the ×1 hit has no note and a modified log works.
     const exchange = at('exchange');
     const damageLine = exchange?.logLines.find((l) => l.includes('takes 3 damage'));
-    expect(damageLine).toBe('PH_A takes 3 damage — 0 Vitality left.');
+    expect(damageLine).toBe('Your PH_A (slot 1) takes 3 damage — 0 Vitality left.');
+  });
+});
+
+describe('side-aware log text (Stage 0.3 gate correction)', () => {
+  it('distinguishes identical creature identities on opposing sides', () => {
+    const events: BattleEvent[] = [
+      {
+        type: 'battle_start',
+        player: [snap('player-1', 'PH_SAME', 'player', 0)],
+        opponent: [snap('opponent-1', 'PH_SAME', 'opponent', 0)],
+      },
+      {
+        type: 'trigger_fired',
+        trigger: 'battle_start',
+        sourceId: 'player-1',
+        abilityId: 'ab-x',
+      },
+      {
+        type: 'trigger_fired',
+        trigger: 'battle_start',
+        sourceId: 'opponent-1',
+        abilityId: 'ab-x',
+      },
+      { type: 'round_start', round: 1 },
+      {
+        type: 'attack',
+        attackerId: 'player-1',
+        defenderId: 'opponent-1',
+        amount: 3,
+        multiplier: 1,
+      },
+      {
+        type: 'attack',
+        attackerId: 'opponent-1',
+        defenderId: 'player-1',
+        amount: 3,
+        multiplier: 1,
+      },
+      {
+        type: 'damage',
+        targetId: 'opponent-1',
+        amount: 3,
+        remainingVitality: 2,
+        blockedByShield: false,
+        cause: { kind: 'attack', attackerId: 'player-1' },
+      },
+      {
+        type: 'damage',
+        targetId: 'player-1',
+        amount: 3,
+        remainingVitality: 2,
+        blockedByShield: false,
+        cause: { kind: 'attack', attackerId: 'opponent-1' },
+      },
+    ];
+    const lines = buildPlayback(events).flatMap((f) => f.logLines);
+    // Trigger lines are distinct per side.
+    expect(lines).toContainEqual(expect.stringContaining('Your PH_SAME (slot 1) triggers'));
+    expect(lines).toContainEqual(expect.stringContaining('Opponent PH_SAME (slot 1) triggers'));
+    // Attack headline names both sides.
+    expect(lines).toContainEqual(
+      'Your PH_SAME (slot 1) and Opponent PH_SAME (slot 1) strike simultaneously!',
+    );
+    // Damage lines are distinct per side.
+    expect(lines).toContainEqual('Opponent PH_SAME (slot 1) takes 3 damage — 2 Vitality left.');
+    expect(lines).toContainEqual('Your PH_SAME (slot 1) takes 3 damage — 2 Vitality left.');
+  });
+
+  it('slot labels reflect the pre-event lineup after compression', () => {
+    const events: BattleEvent[] = [
+      {
+        type: 'battle_start',
+        player: [
+          snap('player-1', 'PH_ONE', 'player', 0),
+          snap('player-2', 'PH_TWO', 'player', 1),
+          snap('player-3', 'PH_THREE', 'player', 2),
+        ],
+        opponent: [snap('opponent-1', 'PH_FOE', 'opponent', 0)],
+      },
+      {
+        type: 'trigger_fired',
+        trigger: 'battle_start',
+        sourceId: 'opponent-1',
+        abilityId: 'ab-snipe',
+      },
+      {
+        type: 'damage',
+        targetId: 'player-1',
+        amount: 9,
+        remainingVitality: 0,
+        blockedByShield: false,
+        cause: {
+          kind: 'ability',
+          abilityId: 'ab-snipe',
+          sourceId: 'opponent-1',
+          trigger: 'battle_start',
+        },
+      },
+      {
+        type: 'defeat',
+        instanceId: 'player-1',
+        side: 'player',
+        slot: 0,
+        cause: {
+          kind: 'ability',
+          abilityId: 'ab-snipe',
+          sourceId: 'opponent-1',
+          trigger: 'battle_start',
+        },
+      },
+      {
+        type: 'compression',
+        side: 'player',
+        removedIds: ['player-1'],
+        order: ['player-2', 'player-3'],
+      },
+      { type: 'round_start', round: 1 },
+      {
+        type: 'trigger_fired',
+        trigger: 'before_own_attack',
+        sourceId: 'player-3',
+        abilityId: 'ab-rage',
+      },
+      {
+        type: 'buff',
+        targetId: 'player-3',
+        stat: 'power',
+        amount: 1,
+        newValue: 4,
+        cause: {
+          kind: 'ability',
+          abilityId: 'ab-rage',
+          sourceId: 'player-3',
+          trigger: 'before_own_attack',
+        },
+      },
+    ];
+    const lines = buildPlayback(events).flatMap((f) => f.logLines);
+    // Before compression, PH_THREE sat in slot 3; afterwards its lines say slot 2.
+    expect(lines).toContainEqual(expect.stringContaining('Your PH_THREE (slot 2) triggers'));
+    expect(lines).toContainEqual('Your PH_THREE (slot 2) gains +1 Power (now 4).');
+    // The defeat that happened BEFORE compression still uses the old slot.
+    expect(lines).toContainEqual('Your PH_ONE (slot 1) is defeated.');
+  });
+
+  it('guard redirection distinguishes protector and intended target by side and position', () => {
+    const frames = buildPlayback(syntheticEvents);
+    const redirectLine = frames.flatMap((f) => f.logLines).find((l) => l.includes('intercepts'));
+    expect(redirectLine).toBe(
+      'Your PH_A (slot 1) intercepts the hit aimed at Your PH_B (slot 2)! ' +
+        'Your PH_A (slot 1) takes 2 damage — 3 Vitality left.',
+    );
   });
 });
 

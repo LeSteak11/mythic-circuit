@@ -67,17 +67,17 @@ Result panel on `battle_end`: outcome heading (Victory! / Defeat / **Draw — aw
 |---|---|---|
 | battle_start | Both lineups appear, FRONT tags | "Battle begins!" |
 | round_start | Round indicator updates (aria-live) | "— Round N —" |
-| trigger_fired | Source card gets solid outline | "NAME triggers (trigger): full ability description" |
-| attack | Both attackers outlined (one frame) | "A and B strike simultaneously!" |
-| damage | Vitality number drops; target dashed outline | "X takes N damage (×1.5 element advantage) — M Vitality left." |
-| heal | Vitality number rises | "X recovers N Vitality (now M)." |
-| buff | Power/Vitality numbers rise | "X gains +N Power (now M)." |
-| shield | "Shield ×N" badge on card | "X raises a shield (N charges)." |
-| guard | "Guard ×N" badge on card | "X guards the ally behind it (N charges)." |
-| shield block | Badge count drops; Vitality unchanged | "X's shield blocks the hit." |
-| guard redirect | Guard badge drops; damage lands on guardian | "G intercepts the hit aimed at V! G takes N damage…" |
-| summon | Token card appears in last slot | "PH_SUMMON_TOKEN is summoned into the last slot (3/3)." |
-| defeat | Card dims + "DEFEATED" label | "X is defeated." |
+| trigger_fired | Source card gets solid outline | "Your NAME (slot 1) triggers (trigger): full ability description" |
+| attack | Both attackers outlined (one frame) | "Your A (slot 1) and Opponent B (slot 1) strike simultaneously!" |
+| damage | Vitality number drops; target dashed outline | "Opponent X (slot 1) takes N damage (×1.5 element advantage) — M Vitality left." |
+| heal | Vitality number rises | "Your X (slot 2) recovers N Vitality (now M)." |
+| buff | Power/Vitality numbers rise | "Your X (slot 3) gains +N Power (now M)." |
+| shield | "Shield ×N" badge on card | "Opponent X (slot 2) raises a shield (N charges)." |
+| guard | "Guard ×N" badge on card | "Your X (slot 1) guards the ally behind it (N charges)." |
+| shield block | Badge count drops; Vitality unchanged | "A shield blocks the hit on Opponent X (slot 1)." |
+| guard redirect | Guard badge drops; damage lands on guardian | "Your G (slot 4) intercepts the hit aimed at Your V (slot 5)! Your G (slot 4) takes N damage…" |
+| summon | Token card appears in last slot | "Your PH_SUMMON_TOKEN is summoned into the last slot (3/3)." |
+| defeat | Card dims + "DEFEATED" label | "Your X (slot 1) is defeated." |
 | compression | Row reflows (CSS transition) | "The player/opponent Circuit closes ranks." |
 | battle_end | Result panel appears | Outcome line, e.g. "Draw — … awarded to you." |
 
@@ -140,49 +140,43 @@ Screenshots (in `ai-communication-docs/phase-0/reports/screenshots/`):
 
 ---
 
+## 8. Gate-review correction (2026-08-19, post CHANGES REQUIRED)
+
+**Required correction from `STAGE_0.3_GATE_REVIEW.md`: side-aware log text — DELIVERED.**
+
+- All creature references in playback log lines now use the recommended side-aware format: `Your PH_EMBER_GUARDIAN_01 (slot 1)` / `Opponent PH_EMBER_GUARDIAN_01 (slot 1)` (`sideAwareName()` in `src/ui/battle/playback.ts`). The blocked-shield line was rephrased to "A shield blocks the hit on Opponent X (slot 1)." to keep the side label readable.
+- Slot labels come from the **display state at the time of the event** (the pre-frame state), so they stay accurate after compression, and they keep multiple same-named summon tokens on one side distinguishable. Summon lines take their side directly from the event snapshot (the token is not yet in the pre-frame state).
+- **Engine event log and combat semantics untouched** — this is presentation text only; the engine and its 50 tests are byte-identical.
+- Three focused tests added (90 total now), exactly matching the review's list:
+  1. identical creature identities on opposing sides produce distinct Your/Opponent trigger, attack-headline, and damage lines;
+  2. slot labels reflect the pre-event lineup after compression (PH_THREE reads "slot 2" after the front falls, while the earlier defeat line keeps its original slot);
+  3. guard-redirection text distinguishes protector and intended target by side and slot.
+- Full command list rerun after the correction — `typecheck` 0 · `lint` 0 · `test` **90/90** · `validate:content` 0 · `sim:archetypes` unchanged · `build` 0 · `test:e2e` **4/4**.
+- Browser evidence refreshed: `stage-0.3-battle.png` now shows the mirror-guardian case from the review resolved — "Your PH_EMBER_GUARDIAN_01 (slot 1) and Opponent PH_EMBER_GUARDIAN_01 (slot 1) strike simultaneously!" with distinct per-side damage lines. Builder/result/1024 screenshots re-captured in the same run.
+- Housekeeping found during the rerun: `npm run format` had reformatted the Owner's root document "Mythic Circuit - Creative Direction v1 (standalone).html" (whitespace only). It was restored from git, and `.prettierignore` now excludes root-level HTML other than `index.html` so owner-managed documents are never touched again.
+
 ## Ready-to-paste commit block
 
 ```
 COMMIT TITLE:
-Phase 0 / Stage 0.3 — Circuit builder, event-log battle playback, result loop
+Phase 0 / Stage 0.3 — Gate correction: side-aware battle log text
 
 COMMIT DESCRIPTION:
-Ticket 1 — Zustand match store (ephemeral circuit/opponent/battle result; runBattle
-called exactly once per match) + Playwright harness with npm run test:e2e.
+Gate-review correction (STAGE_0.3_GATE_REVIEW.md): all playback log lines now
+identify creatures by side and slot — "Your PH_EMBER_GUARDIAN_01 (slot 1)" vs
+"Opponent PH_EMBER_GUARDIAN_01 (slot 1)" — using the display state at the time
+of each event, so slot labels stay accurate after compression and same-named
+summon tokens remain distinguishable. Presentation text only; engine event log
+and combat semantics untouched.
 
-Ticket 2 — Runtime content catalog (single validated load, ability interpolation) and
-ONE reusable CreatureCard for builder + battle: stats, element/rarity as text +
-non-color cues, manifest-resolved art with accessible ART PENDING fallback, all
-styling via --card-* CSS tokens. Asset loader now resolves URLs via import.meta.glob.
+Three focused tests added per the review (90 total): distinct per-side lines for
+identical creature identities, post-compression slot accuracy, and side/position
+in guard-redirection text. Full command list rerun (typecheck, lint, 90/90
+tests, validate:content, sim, build, 4/4 e2e) and browser screenshots refreshed;
+correction section appended to STAGE_0.3_COMPLETION_REPORT.md.
 
-Ticket 3 — Functional Circuit Builder: 12-creature roster, ordered slots 1–5 with
-front/rear labels, drag AND keyboard reordering, duplicate/overfill prevention,
-validateLineup()-backed messages, Reset, gated Battle action.
-
-Ticket 4 — Three archetype opponents as validated content data
-(opponent-lineups.json, with new referential checks), ordered preview, fixed
-documented seed (20260819), friendly /battle empty state.
-
-Ticket 5 — Pure playback model: event-log folding into frames (attack pair + damage
-= one simultaneous-exchange frame), display state incl. charges/summons/compression,
-readable cause-attributed log lines, timing separated from outcome.
-
-Ticket 6 — Battle screen: facing labeled Circuits, source/target highlights,
-Play/Pause/Next/1×/2×/Skip/Replay, persistent battle log.
-
-Ticket 7 — Result panel: outcome (draws labeled and awarded to the player), rounds,
-defeats, trigger/effect activity summary, Edit Circuit + Replay Battle.
-
-Ticket 8 — Keyboard operability, visible focus, non-color cues, prefers-reduced-motion
-support, 1024px+ layouts with no horizontal overflow, and
-CREATIVE_ASSET_DELIVERY_SPEC.md with pinned masters + safe-zone diagram.
-
-Ticket 9 — 37 new unit tests (87 total) + 4 Playwright tests incl. the full
-builder → opponent → battle → skip/result → return workflow and screenshot evidence;
-READMEs updated.
-
-Verification: typecheck, lint, 87/87 unit tests, validate:content (now incl.
-3 opponent lineups), sim:archetypes unchanged, build, and 4/4 e2e all pass; zero
-console errors; browser evidence in reports/screenshots/. Details in
-ai-communication-docs/phase-0/reports/STAGE_0.3_COMPLETION_REPORT.md.
+Also: .prettierignore now excludes owner-managed root HTML documents (the
+Creative Direction doc was restored untouched from git).
 ```
+
+(The original full-stage commit block was superseded: the Stage 0.3 implementation is already committed per the gate review's history note, so the pending commit is the correction above.)
