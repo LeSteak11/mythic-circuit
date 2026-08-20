@@ -1,0 +1,26 @@
+[
+  {
+    "id": "ability-guard-01",
+    "trigger": "battle_start",
+    "effect": "guard",
+    "magnitude": 1,
+    "target": "ally_behind",
+    "descriptionTemplate": "Redirects the next {magnitude} hit aimed at the ally behind to itself."
+  },
+  {
+    "id": "ability-scavenge-01",
+    "trigger": "ally_defeated",
+    "effect": "scavenge",
+    "magnitude": 2,
+    "target": "self",
+    "descriptionTemplate": "Gains {magnitude} Power whenever an ally is defeated."
+  },
+  {
+    "id": "ability-spark-01",
+    "trigger": "end_of_round",
+    "effect": "damage",
+    "magnitude": 1,
+    "target": "front_enemy",
+    "descriptionTemplate": "Deals {magnitude} damage to the front enemy at the end of each round."
+  }
+]

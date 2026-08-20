@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "variants": {
+    "variant-ember-guardian-01-standard": {
+      "art": "placeholder/art-ember-guardian-01.svg",
+      "frame": "placeholder/frame-standard.svg"
+    },
+    "variant-tide-scavenger-01-standard": {
+      "art": "placeholder/art-tide-scavenger-01.svg",
+      "frame": "placeholder/frame-standard.svg"
+    }
+  }
+}

@@ -1,0 +1,31 @@
+[
+  {
+    "id": "creature-broken-01",
+    "element": "shadow",
+    "rarity": "common",
+    "power": 0,
+    "vitality": 5,
+    "abilityId": "ability-guard-01",
+    "familyTag": "guardian"
+  },
+  {
+    "id": "creature-dupe-01",
+    "name": "PH_DUPE_A",
+    "element": "ember",
+    "rarity": "common",
+    "power": 2,
+    "vitality": 2,
+    "abilityId": "ability-guard-01",
+    "familyTag": "guardian"
+  },
+  {
+    "id": "creature-dupe-01",
+    "name": "PH_DUPE_B",
+    "element": "tide",
+    "rarity": "rare",
+    "power": 3,
+    "vitality": 3,
+    "abilityId": "ability-does-not-exist",
+    "familyTag": "scavenger"
+  }
+]

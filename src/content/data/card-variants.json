@@ -1,0 +1,16 @@
+[
+  {
+    "id": "variant-ember-guardian-01-standard",
+    "creatureId": "creature-ember-guardian-01",
+    "treatment": "standard",
+    "artRef": "art-ember-guardian-01",
+    "frameRef": "frame-standard"
+  },
+  {
+    "id": "variant-tide-scavenger-01-standard",
+    "creatureId": "creature-tide-scavenger-01",
+    "treatment": "standard",
+    "artRef": "art-tide-scavenger-01",
+    "frameRef": "frame-standard"
+  }
+]

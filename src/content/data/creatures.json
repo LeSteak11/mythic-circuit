@@ -1,0 +1,32 @@
+[
+  {
+    "id": "creature-ember-guardian-01",
+    "name": "PH_EMBER_GUARDIAN_01",
+    "element": "ember",
+    "rarity": "common",
+    "power": 3,
+    "vitality": 7,
+    "abilityId": "ability-guard-01",
+    "familyTag": "guardian"
+  },
+  {
+    "id": "creature-tide-scavenger-01",
+    "name": "PH_TIDE_SCAVENGER_01",
+    "element": "tide",
+    "rarity": "common",
+    "power": 4,
+    "vitality": 4,
+    "abilityId": "ability-scavenge-01",
+    "familyTag": "scavenger"
+  },
+  {
+    "id": "creature-volt-striker-01",
+    "name": "PH_VOLT_STRIKER_01",
+    "element": "volt",
+    "rarity": "rare",
+    "power": 5,
+    "vitality": 3,
+    "abilityId": "ability-spark-01",
+    "familyTag": "tempo"
+  }
+]
